@@ -8,6 +8,7 @@ import morgan from "morgan";
 import authRoutes from "./routes/auth.routes.js";
 import setupRoutes from "./routes/setup.routes.js";
 import patientRoutes from "./routes/patient.routes.js";
+import staffRoutes from "./routes/staff.routes.js";
 
 import errorHandler from "./middlewares/error.middleware.js";
 
@@ -40,7 +41,7 @@ app.get("/", (req, res) => {
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/setup", setupRoutes);
 app.use("/api/v1/patients", patientRoutes);
-
+app.use("/api/v1/staff", staffRoutes);
 // 404 handler (MUST BE LAST)
 app.use((req, res) => {
   res.status(404).json({
