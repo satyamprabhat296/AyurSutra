@@ -9,8 +9,11 @@ import authRoutes from "./routes/auth.routes.js";
 import setupRoutes from "./routes/setup.routes.js";
 import patientRoutes from "./routes/patient.routes.js";
 import staffRoutes from "./routes/staff.routes.js";
-
+import appointmentRoutes from "./routes/appointment.routes.js";
+import consultationRoutes from "./routes/consultation.routes.js";
+import billingRoutes from "./routes/billing.routes.js";
 import errorHandler from "./middlewares/error.middleware.js";
+import medicineRoutes from "./routes/medicine.routes.js";
 
 dotenv.config();
 
@@ -29,6 +32,10 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use("/api/v1/appointments", appointmentRoutes);
+app.use("/api/v1/consultations", consultationRoutes);
+app.use("/api/v1/billing", billingRoutes);
+app.use("/api/v1/medicines", medicineRoutes);
 
 app.get("/", (req, res) => {
   res.json({
