@@ -14,7 +14,8 @@ import consultationRoutes from "./routes/consultation.routes.js";
 import billingRoutes from "./routes/billing.routes.js";
 import errorHandler from "./middlewares/error.middleware.js";
 import medicineRoutes from "./routes/medicine.routes.js";
-
+import inventoryRoutes from "./routes/inventory.routes.js";
+import prescriptionRoutes from "./routes/prescription.routes.js";
 dotenv.config();
 
 const app = express();
@@ -36,7 +37,8 @@ app.use("/api/v1/appointments", appointmentRoutes);
 app.use("/api/v1/consultations", consultationRoutes);
 app.use("/api/v1/billing", billingRoutes);
 app.use("/api/v1/medicines", medicineRoutes);
-
+app.use("/api/v1/prescriptions", prescriptionRoutes);
+app.use("/api/v1/inventory", inventoryRoutes);
 app.get("/", (req, res) => {
   res.json({
     success: true,
@@ -51,7 +53,7 @@ app.use("/api/v1/patients", patientRoutes);
 app.use("/api/v1/staff", staffRoutes);
 // 404 handler (MUST BE LAST)
 app.use((req, res) => {
-  res.status(404).json({
+  res.status(404).json({ 
     success: false,
     message: "Route Not Found",
   });
