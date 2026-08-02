@@ -7,7 +7,7 @@ const prescriptionItemSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Medicine",
       required: true,
-    },
+    }, 
 
     dosage: {
       type: String,
