@@ -16,6 +16,8 @@ import errorHandler from "./middlewares/error.middleware.js";
 import medicineRoutes from "./routes/medicine.routes.js";
 import inventoryRoutes from "./routes/inventory.routes.js";
 import prescriptionRoutes from "./routes/prescription.routes.js";
+import purchaseRoutes from "./routes/purchase.routes.js";
+import dashboardRoutes from "./routes/dashboard.routes.js";
 dotenv.config();
 
 const app = express();
@@ -39,6 +41,8 @@ app.use("/api/v1/billing", billingRoutes);
 app.use("/api/v1/medicines", medicineRoutes);
 app.use("/api/v1/prescriptions", prescriptionRoutes);
 app.use("/api/v1/inventory", inventoryRoutes);
+app.use("/api/v1/purchases", purchaseRoutes);
+app.use("/api/v1/dashboard", dashboardRoutes);
 app.get("/", (req, res) => {
   res.json({
     success: true,
