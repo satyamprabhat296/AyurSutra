@@ -3,6 +3,7 @@ import { dispensePrescriptionService } from "../services/prescription.service.js
 
 
 import { validatePrescription } from "../services/prescription.service.js";
+import { generatePrescriptionPDF } from "../services/pdf.service.js";
 
 // Create Prescription
 export const createPrescription = async (req, res) => {
@@ -114,6 +115,43 @@ export const getPrescription = async (req, res) => {
 
   }
 
+};
+export const getPrescriptionPDF = async (req, res) => {
+  try {
+
+    const prescription = await Prescription.findOne({
+      _id: req.params.id,
+      clinic: req.user.clinic,
+    })
+      .populate("patient", "patientId fullName")
+      .populate("consultation")
+      .populate("prescribedBy", "name")
+      .populate("dispensedBy", "name")
+      .populate(
+        "medicines.medicine",
+        "medicineName medicineCode"
+      );
+
+    if (!prescription) {
+      return res.status(404).json({
+        success: false,
+        message: "Prescription not found.",
+      });
+    }
+
+    generatePrescriptionPDF(
+      prescription,
+      res
+    );
+
+  } catch (error) {
+
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+
+  }
 };
 export const dispensePrescription = async (req, res) => {
 

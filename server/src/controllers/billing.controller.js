@@ -4,6 +4,7 @@ import {
   generateInvoiceNumber,
   calculateBill,
 } from "../services/billing.service.js";
+import { generateInvoicePDF } from "../services/pdf.service.js";
 
 export const createBill = async (req, res) => {
 
@@ -145,3 +146,29 @@ export const markBillPaid = async (req, res) => {
 
 
 
+export const getBillPDF = async (req, res) => {
+  try {
+    const bill = await Billing.findOne({
+      _id: req.params.id,
+      clinic: req.user.clinic,
+    })
+      .populate("patient", "patientId fullName")
+      .populate("appointment")
+      .populate("consultation");
+
+    if (!bill) {
+      return res.status(404).json({
+        success: false,
+        message: "Bill not found.",
+      });
+    }
+
+    generateInvoicePDF(bill, res);
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};

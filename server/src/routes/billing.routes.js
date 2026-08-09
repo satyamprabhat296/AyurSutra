@@ -4,6 +4,7 @@ import {
   createBill,
   getBills,
   getBill,
+  getBillPDF,
   markBillPaid,
 } from "../controllers/billing.controller.js";
 
@@ -24,6 +25,15 @@ router.get(
   protect,
   authorize("super_admin", "accountant", "receptionist"),
   getBills
+);
+router.get(
+  "/:id/pdf",
+  protect,
+  authorize(
+    "super_admin",
+    "accountant"
+  ),
+  getBillPDF
 );
 
 router.get(

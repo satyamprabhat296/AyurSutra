@@ -5,8 +5,8 @@ import {
   dispensePrescription,
   getPrescriptions,
   getPrescription,
+  getPrescriptionPDF,
 } from "../controllers/prescription.controller.js";
-
 import { protect } from "../middlewares/auth.middleware.js";
 import authorize from "../middlewares/authorize.middleware.js";
 
@@ -29,6 +29,16 @@ router.get(
   protect,
   authorize("super_admin", "doctor", "pharmacist"),
   getPrescriptions
+);
+router.get(
+  "/:id/pdf",
+  protect,
+  authorize(
+    "super_admin",
+    "doctor",
+    "pharmacist"
+  ),
+  getPrescriptionPDF
 );
 
 router.get(
