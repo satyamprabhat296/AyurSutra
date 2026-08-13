@@ -43,7 +43,7 @@ const Dashboard = () => {
           appointmentsResponse,
           billsResponse,
         ] = await Promise.all([
-          api.get("/patient"),
+          api.get("/patients"),
           api.get("/appointment"),
           api.get("/billing"),
         ]);

@@ -7,18 +7,29 @@ import Patient from "../models/patient.model.js";
 export const generatePatientId = async () => {
   const year = new Date().getFullYear();
 
-  const lastPatient = await Patient.findOne()
-    .sort({ createdAt: -1 })
+  const prefix = `AYU-${year}-`;
+
+  const lastPatient = await Patient.findOne({
+    patientId: {
+      $regex: `^${prefix}`,
+    },
+  })
+    .sort({ patientId: -1 })
     .select("patientId");
 
   let sequence = 1;
 
-  if (lastPatient) {
+  if (lastPatient?.patientId) {
     const parts = lastPatient.patientId.split("-");
-    sequence = Number(parts[2]) + 1;
+
+    const lastSequence = Number(parts[2]);
+
+    if (!Number.isNaN(lastSequence)) {
+      sequence = lastSequence + 1;
+    }
   }
 
-  return `AYU-${year}-${String(sequence).padStart(6, "0")}`;
+  return `${prefix}${String(sequence).padStart(6, "0")}`;
 };
 
 /**
@@ -30,29 +41,59 @@ export const createPatient = async (patientData) => {
 
 /**
  * Get Patient by ID
+ * Clinic restricted
  */
-export const getPatientById = async (id) => {
-  return await Patient.findById(id);
-};
-
-/**
- * Update Patient
- */
-export const updatePatientById = async (id, data) => {
-  return await Patient.findByIdAndUpdate(id, data, {
-    new: true,
-    runValidators: true,
+export const getPatientById = async (id, clinic) => {
+  return await Patient.findOne({
+    _id: id,
+    clinic,
+    isActive: true,
   });
 };
 
 /**
- * Soft Delete Patient
+ * Update Patient
+ * Clinic restricted
  */
-export const deletePatientById = async (id) => {
-  return await Patient.findByIdAndUpdate(
-    id,
-    { isActive: false },
-    { new: true }
+export const updatePatientById = async (
+  id,
+  clinic,
+  data
+) => {
+  return await Patient.findOneAndUpdate(
+    {
+      _id: id,
+      clinic,
+      isActive: true,
+    },
+    data,
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+};
+
+/**
+ * Soft Delete Patient
+ * Clinic restricted
+ */
+export const deletePatientById = async (
+  id,
+  clinic
+) => {
+  return await Patient.findOneAndUpdate(
+    {
+      _id: id,
+      clinic,
+      isActive: true,
+    },
+    {
+      isActive: false,
+    },
+    {
+      new: true,
+    }
   );
 };
 
@@ -65,36 +106,38 @@ export const getPatients = async ({
   limit = 10,
   search = "",
 }) => {
+  page = Math.max(1, Number(page) || 1);
+  limit = Math.min(
+    100,
+    Math.max(1, Number(limit) || 10)
+  );
+
   const query = {
     clinic,
     isActive: true,
   };
 
-  if (search) {
+  if (search.trim()) {
+    const searchRegex = {
+      $regex: search.trim(),
+      $options: "i",
+    };
+
     query.$or = [
       {
-        patientId: {
-          $regex: search,
-          $options: "i",
-        },
+        patientId: searchRegex,
       },
       {
-        "basicInfo.firstName": {
-          $regex: search,
-          $options: "i",
-        },
+        "basicInfo.firstName": searchRegex,
       },
       {
-        "basicInfo.lastName": {
-          $regex: search,
-          $options: "i",
-        },
+        "basicInfo.lastName": searchRegex,
       },
       {
-        "contact.phone": {
-          $regex: search,
-          $options: "i",
-        },
+        "contact.phone": searchRegex,
+      },
+      {
+        "contact.email": searchRegex,
       },
     ];
   }
@@ -110,6 +153,7 @@ export const getPatients = async ({
     patients,
     total,
     page,
+    limit,
     totalPages: Math.ceil(total / limit),
   };
 };

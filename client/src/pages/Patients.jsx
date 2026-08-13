@@ -1495,7 +1495,7 @@ const Info = ({
       {label}
     </p>
 
-    <p className="mt-1 break-words text-sm font-semibold text-gray-800">
+    <p className="mt-1 wrap-break-word text-sm font-semibold text-gray-800">
       {value || "—"}
     </p>
 
