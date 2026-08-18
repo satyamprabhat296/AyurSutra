@@ -10,7 +10,7 @@ export const getInventoryHistory = async () => {
 };
 
 /**
- * Create inventory transaction
+ * Create inventory transaction 
  */
 export const createInventoryTransaction = async (
   transactionData
