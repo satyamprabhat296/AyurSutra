@@ -16,6 +16,8 @@ import Appointments from "./pages/appointments/Appointments";
 import Consultations from "./pages/consultations/Consultations";
 import Billing from "./pages/Billing";
 import Medicines from "./pages/Medicines";
+import Inventory from "./pages/Inventory";
+import Purchases from "./pages/Purchases";
 
 const App = () => {
   return (
@@ -46,12 +48,19 @@ const App = () => {
               path="/"
               element={<Dashboard />}
             />
+            <Route
+  path="/inventory"
+  element={<Inventory />}
+/>
 
 <Route
   path="/medicines"
   element={<Medicines />}
 />
-
+<Route
+  path="/purchases"
+  element={<Purchases />}
+/>
             {/* Patients */}
             <Route
               path="/patients"
