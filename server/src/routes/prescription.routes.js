@@ -4,7 +4,7 @@ import {
   createPrescription,
   dispensePrescription,
   getPrescriptions,
-  getPrescription,
+ getPrescription,
   getPrescriptionPDF,
 } from "../controllers/prescription.controller.js";
 import { protect } from "../middlewares/auth.middleware.js";
@@ -51,6 +51,15 @@ router.post(
   "/:id/dispense",
   protect,
   authorize("super_admin", "pharmacist"),
+  dispensePrescription
+);
+router.post(
+  "/:id/dispense",
+  protect,
+  authorize(
+    "super_admin",
+    "pharmacist"
+  ),
   dispensePrescription
 );
 

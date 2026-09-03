@@ -5,7 +5,6 @@ import {
   FileText,
   LayoutDashboard,
   LogOut,
-  Menu,
   Pill,
   Receipt,
   Settings,
@@ -13,6 +12,7 @@ import {
   Stethoscope,
   Users,
   X,
+  Store,
 } from "lucide-react";
 
 import { NavLink } from "react-router-dom";
@@ -50,30 +50,35 @@ const navigation = [
     ],
   },
   {
-    label: "Pharmacy",
-    items: [
-      {
-        name: "Prescriptions",
-        path: "/prescriptions",
-        icon: ClipboardList,
-      },
-      {
-        name: "Medicines",
-        path: "/medicines",
-        icon: Pill,
-      },
-      {
-        name: "Inventory",
-        path: "/inventory",
-        icon: Activity,
-      },
-      {
-        name: "Purchases",
-        path: "/purchases",
-        icon: ShoppingCart,
-      },
-    ],
-  },
+  label: "Pharmacy",
+  items: [
+    {
+      name: "Pharmacy",
+      path: "/pharmacy",
+      icon: Store,
+    },
+    {
+      name: "Prescriptions",
+      path: "/prescriptions",
+      icon: ClipboardList,
+    },
+    {
+      name: "Medicines",
+      path: "/medicines",
+      icon: Pill,
+    },
+    {
+      name: "Inventory",
+      path: "/inventory",
+      icon: Activity,
+    },
+    {
+      name: "Purchases",
+      path: "/purchases",
+      icon: ShoppingCart,
+    },
+  ],
+},
   {
     label: "Finance",
     items: [

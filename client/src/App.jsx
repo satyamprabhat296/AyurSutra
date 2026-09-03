@@ -18,6 +18,8 @@ import Billing from "./pages/Billing";
 import Medicines from "./pages/Medicines";
 import Inventory from "./pages/Inventory";
 import Purchases from "./pages/Purchases";
+import Pharmacy from "./pages/pharmacy/Pharmacy";
+import Prescriptions from "./pages/prescriptions/Prescriptions";
 
 const App = () => {
   return (
@@ -52,11 +54,21 @@ const App = () => {
   path="/inventory"
   element={<Inventory />}
 />
+<Route
+  path="/pharmacy"
+  element={<Pharmacy />}
+/>
 
 <Route
   path="/medicines"
   element={<Medicines />}
 />
+
+<Route
+  path="/prescriptions"
+  element={<Prescriptions />}
+/>
+
 <Route
   path="/purchases"
   element={<Purchases />}
