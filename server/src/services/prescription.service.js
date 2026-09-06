@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import Billing from "../models/billing.model.js";
 import Prescription from "../models/prescription.model.js";
-import Consultation from "../models/consultation.model.js";
+import Consultation from "../models/consultation.model.js"; 
 import Medicine from "../models/medicine.model.js";
 import Inventory from "../models/inventory.model.js";
 
