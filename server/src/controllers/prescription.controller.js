@@ -12,7 +12,7 @@ export const createPrescription = async (req, res) => {
 
   try {
 
-    const {
+    const { 
       patient,
       consultation,
       medicines,
