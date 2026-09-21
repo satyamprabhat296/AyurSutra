@@ -1,11 +1,12 @@
 import express from "express";
 
 import {
-  getReportSummary,
-  getRevenueReport,
-  getAppointmentReport,
-  getPharmacyReport,
-} from "../controllers/report.controller.js";
+  getSettings,
+  updateProfile,
+  changePassword,
+  updateClinicSettings,
+  updatePreferences,
+} from "../controllers/settings.controller.js";
 
 import { protect } from "../middlewares/auth.middleware.js";
 import  authorize  from "../middlewares/authorize.middleware.js";
@@ -13,59 +14,74 @@ import  authorize  from "../middlewares/authorize.middleware.js";
 const router = express.Router();
 
 // ==========================================
-// REPORT SUMMARY
+// GET ALL SETTINGS
 // ==========================================
 router.get(
-  "/summary",
+  "/",
   protect,
   authorize(
     "super_admin",
     "doctor",
     "receptionist",
+    "therapist",
     "pharmacist",
     "accountant"
   ),
-  getReportSummary
+  getSettings
 );
 
 // ==========================================
-// REVENUE
+// PROFILE
 // ==========================================
-router.get(
-  "/revenue",
-  protect,
-  authorize(
-    "super_admin",
-    "accountant"
-  ),
-  getRevenueReport
-);
-
-// ==========================================
-// APPOINTMENTS
-// ==========================================
-router.get(
-  "/appointments",
+router.put(
+  "/profile",
   protect,
   authorize(
     "super_admin",
     "doctor",
-    "receptionist"
+    "receptionist",
+    "therapist",
+    "pharmacist",
+    "accountant"
   ),
-  getAppointmentReport
+  updateProfile
 );
 
 // ==========================================
-// PHARMACY
+// CHANGE PASSWORD
 // ==========================================
-router.get(
-  "/pharmacy",
+router.put(
+  "/password",
   protect,
   authorize(
     "super_admin",
-    "pharmacist"
+    "doctor",
+    "receptionist",
+    "therapist",
+    "pharmacist",
+    "accountant"
   ),
-  getPharmacyReport
+  changePassword
+);
+
+// ==========================================
+// CLINIC SETTINGS
+// ==========================================
+router.put(
+  "/clinic",
+  protect,
+  authorize("super_admin"),
+  updateClinicSettings
+);
+
+// ==========================================
+// PREFERENCES
+// ==========================================
+router.put(
+  "/preferences",
+  protect,
+  authorize("super_admin"),
+  updatePreferences
 );
 
 export default router;

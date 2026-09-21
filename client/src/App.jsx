@@ -5,6 +5,7 @@ import {
 } from "react-router-dom";
 
 import { AuthProvider } from "./context/AuthContext";
+import Reports from "./pages/reports/Reports";
 
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
@@ -88,6 +89,10 @@ const App = () => {
 <Route
   path="/billing"
   element={<Billing />}
+/>
+<Route
+  path="/reports"
+  element={<Reports />}
 />
 
             {/* Consultations */}

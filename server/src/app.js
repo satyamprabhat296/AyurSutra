@@ -19,6 +19,7 @@ import prescriptionRoutes from "./routes/prescription.routes.js";
 import purchaseRoutes from "./routes/purchase.routes.js";
 import dashboardRoutes from "./routes/dashboard.routes.js";
 import reportRoutes from "./routes/report.routes.js";
+import settingsRoutes from "./routes/settings.routes.js";
 dotenv.config();
 
 const app = express();
@@ -45,6 +46,7 @@ app.use("/api/v1/inventory", inventoryRoutes);
 app.use("/api/v1/purchases", purchaseRoutes);
 app.use("/api/v1/dashboard", dashboardRoutes);
 app.use("/api/v1/reports", reportRoutes);
+app.use("/api/v1/settings", settingsRoutes);
 app.get("/", (req, res) => {
   res.json({
     success: true,

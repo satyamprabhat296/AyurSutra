@@ -8,35 +8,69 @@ const clinicSchema = new mongoose.Schema(
       trim: true,
     },
 
-    email: {
+    registrationNumber: {
       type: String,
-      lowercase: true,
       trim: true,
     },
 
     phone: {
       type: String,
-      required: true,
+      trim: true,
+    },
+
+    email: {
+      type: String,
+      trim: true,
+      lowercase: true,
     },
 
     address: {
-      street: String,
-      city: String,
-      state: String,
-      pincode: String,
-      country: {
-        type: String,
-        default: "India",
-      },
+      type: String,
+      trim: true,
     },
 
-    logo: String,
+    city: {
+      type: String,
+      trim: true,
+    },
 
-    gstNumber: String,
+    state: {
+      type: String,
+      trim: true,
+    },
 
-    registrationNumber: String,
+    pincode: {
+      type: String,
+      trim: true,
+    },
 
-    website: String,
+    website: {
+      type: String,
+      trim: true,
+    },
+
+    logo: {
+      type: String,
+      trim: true,
+    },
+
+    settings: {
+      currency: {
+        type: String,
+        default: "INR",
+      },
+
+      dateFormat: {
+        type: String,
+        default: "DD/MM/YYYY",
+      },
+
+      appointmentDuration: {
+        type: Number,
+        default: 30,
+        min: 5,
+      },
+    },
 
     isActive: {
       type: Boolean,
