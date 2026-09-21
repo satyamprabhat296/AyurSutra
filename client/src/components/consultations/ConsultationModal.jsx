@@ -1,12 +1,9 @@
 import { useEffect, useState } from "react";
 
 import {
-  createConsultation,
-} from "../../services/ConsultationService";
-
-import {
   getAppointments,
 } from "../../services/appointmentService";
+import { createConsultation } from "../../services/consultationService";
 
 
 const initialVitals = {
