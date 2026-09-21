@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { getConsultations } from "../../services/ConsultationService.js";
-
+import { getConsultations } from "../../services/ConsultationService";
 import ConsultationModal from "../../components/consultations/ConsultationModal";
 
 
