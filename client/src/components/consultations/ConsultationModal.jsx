@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import {
   createConsultation,
-} from "../../services/consultationService";
+} from "../../services/ConsultationService";
 
 import {
   getAppointments,
