@@ -78,28 +78,69 @@ export const register = async (req, res) => {
   }
 };
 
-
 // Login
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    console.log("========== LOGIN START ==========");
+    console.log("EMAIL RECEIVED:", email);
+    console.log("PASSWORD RECEIVED:", !!password);
+
+    if (!email || !password) {
+      console.log("LOGIN FAILED: Missing email or password");
+
+      return res.status(400).json({
+        success: false,
+        message: "Email and password are required",
+      });
+    }
+
+    const normalizedEmail = email.trim().toLowerCase();
+
+    console.log("NORMALIZED EMAIL:", normalizedEmail);
+
     // Find user
     const user = await User.findOne({
-      email,
+      email: normalizedEmail,
     }).select("+password");
 
+    console.log("USER FOUND:", !!user);
+
     if (!user) {
+      console.log("LOGIN FAILED: User not found");
+
       return res.status(401).json({
         success: false,
         message: "Invalid Credentials",
       });
     }
 
+    console.log("USER ID:", user._id);
+    console.log("USER NAME:", user.name);
+    console.log("USER ROLE:", user.role);
+    console.log("PASSWORD HASH EXISTS:", !!user.password);
+    console.log("ACCOUNT ACTIVE:", user.isActive);
+
+    if (!user.isActive) {
+      console.log("LOGIN FAILED: Account inactive");
+
+      return res.status(403).json({
+        success: false,
+        message: "Your account is inactive",
+      });
+    }
+
     // Compare password
+    console.log("CHECKING PASSWORD...");
+
     const isMatched = await user.comparePassword(password);
 
+    console.log("PASSWORD MATCH:", isMatched);
+
     if (!isMatched) {
+      console.log("LOGIN FAILED: Password mismatch");
+
       return res.status(401).json({
         success: false,
         message: "Invalid Credentials",
@@ -107,38 +148,58 @@ export const login = async (req, res) => {
     }
 
     // Update last login
+    console.log("UPDATING LAST LOGIN...");
+
     user.lastLogin = new Date();
 
     await user.save();
 
+    console.log("LAST LOGIN UPDATED");
+
     // Generate JWT
+    console.log("GENERATING TOKEN...");
+
     const token = generateToken(user._id);
+
+    console.log("TOKEN GENERATED");
 
     // Set authentication cookie
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      sameSite:
+        process.env.NODE_ENV === "production"
+          ? "none"
+          : "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
+
+    console.log("COOKIE SET");
 
     // Remove password from response
     user.password = undefined;
 
-    res.status(200).json({
+    console.log("LOGIN SUCCESS");
+    console.log("========== LOGIN END ==========");
+
+    return res.status(200).json({
       success: true,
       message: "Login Successful",
       user,
     });
   } catch (error) {
-    res.status(500).json({
+    console.error("========== LOGIN ERROR ==========");
+    console.error("ERROR NAME:", error.name);
+    console.error("ERROR MESSAGE:", error.message);
+    console.error("ERROR STACK:", error.stack);
+    console.error("========== LOGIN ERROR END ==========");
+
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
   }
 };
-
-
 // Logout
 export const logout = async (req, res) => {
   try {
