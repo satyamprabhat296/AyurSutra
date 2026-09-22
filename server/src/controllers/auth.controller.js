@@ -15,6 +15,7 @@ export const register = async (req, res) => {
       role,
     } = req.body;
 
+    // Validate required fields
     if (!clinicId || !name || !email || !phone || !password) {
       return res.status(400).json({
         success: false,
@@ -22,6 +23,7 @@ export const register = async (req, res) => {
       });
     }
 
+    // Check clinic
     const clinic = await Clinic.findById(clinicId);
 
     if (!clinic) {
@@ -31,6 +33,7 @@ export const register = async (req, res) => {
       });
     }
 
+    // Check existing user
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
@@ -40,6 +43,7 @@ export const register = async (req, res) => {
       });
     }
 
+    // Create user
     const user = await User.create({
       clinic: clinicId,
       name,
@@ -50,12 +54,14 @@ export const register = async (req, res) => {
       role,
     });
 
+    // Generate JWT
     const token = generateToken(user._id);
 
+    // Set authentication cookie
     res.cookie("token", token, {
       httpOnly: true,
-      sameSite: "lax",
-      secure: false,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
@@ -64,7 +70,6 @@ export const register = async (req, res) => {
       message: "Registration Successful",
       user,
     });
-
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -73,12 +78,13 @@ export const register = async (req, res) => {
   }
 };
 
+
 // Login
 export const login = async (req, res) => {
   try {
-
     const { email, password } = req.body;
 
+    // Find user
     const user = await User.findOne({
       email,
     }).select("+password");
@@ -90,6 +96,7 @@ export const login = async (req, res) => {
       });
     }
 
+    // Compare password
     const isMatched = await user.comparePassword(password);
 
     if (!isMatched) {
@@ -99,19 +106,23 @@ export const login = async (req, res) => {
       });
     }
 
+    // Update last login
     user.lastLogin = new Date();
 
     await user.save();
 
+    // Generate JWT
     const token = generateToken(user._id);
 
+    // Set authentication cookie
     res.cookie("token", token, {
       httpOnly: true,
-      sameSite: "lax",
-      secure: false,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
+    // Remove password from response
     user.password = undefined;
 
     res.status(200).json({
@@ -119,38 +130,43 @@ export const login = async (req, res) => {
       message: "Login Successful",
       user,
     });
-
   } catch (error) {
-
     res.status(500).json({
       success: false,
       message: error.message,
     });
-
   }
 };
 
+
 // Logout
 export const logout = async (req, res) => {
+  try {
+    res.cookie("token", "", {
+      expires: new Date(0),
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    });
 
-  res.cookie("token", "", {
-    expires: new Date(0),
-    httpOnly: true,
-  });
-
-  res.status(200).json({
-    success: true,
-    message: "Logout Successful",
-  });
-
+    res.status(200).json({
+      success: true,
+      message: "Logout Successful",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
 };
+
 
 // Current User
 export const getCurrentUser = async (req, res) => {
-
   res.status(200).json({
     success: true,
     user: req.user,
   });
-
 };
+
